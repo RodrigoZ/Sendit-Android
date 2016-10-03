@@ -27,4 +27,5 @@ dependencies {
     //compile 'com.google.android.gms:play-services:9.6.1' //Si le clavo play servides, el proyecto no llega a construirse, ya q play services me trae t0do (wearables, driveanalytics, etc)... hay q llamarlas de a una, en base a lo q usemos
     compile 'com.google.android.gms:play-services-location:9.6.1'
     compile 'com.google.android.gms:play-services-maps:9.6.1'
+    compile 'com.google.android.gms:play-services-appindexing:9.6.1'
 }
