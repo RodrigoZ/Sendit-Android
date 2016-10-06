@@ -24,8 +24,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.1'
-    //compile 'com.google.android.gms:play-services:9.6.1' //Si le clavo play servides, el proyecto no llega a construirse, ya q play services me trae t0do (wearables, driveanalytics, etc)... hay q llamarlas de a una, en base a lo q usemos
+    //compile 'com.google.android.gms:play-services:9.6.1' //Si le clavo play services, el proyecto no llega a construirse, ya q play services me trae t0do (wearables, drive, analytics, etc)... hay q llamarlas de a una, en base a lo q usemos
     compile 'com.google.android.gms:play-services-location:9.6.1'
     compile 'com.google.android.gms:play-services-maps:9.6.1'
     compile 'com.google.android.gms:play-services-appindexing:9.6.1'
+    compile 'com.amitshekhar.android:android-networking:0.2.0'
 }

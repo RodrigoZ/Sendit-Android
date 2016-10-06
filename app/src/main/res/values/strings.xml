@@ -3,4 +3,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">Sendit</string>
     <string name="btn_maps">En donde estoy?</string>
+    <string name="btn_REST">REST</string>
+    <string name="btn_TestAPI">TEST</string>
 </resources>

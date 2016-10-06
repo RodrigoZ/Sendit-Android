@@ -18,4 +18,14 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:onClick="openMaps"/>
+
+    <Button
+        android:text="@string/btn_REST"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:id="@+id/btn_REST"
+        android:layout_below="@+id/btn_Maps"
+        android:layout_centerHorizontal="true"
+        android:onClick="openREST"/>
 </RelativeLayout>
