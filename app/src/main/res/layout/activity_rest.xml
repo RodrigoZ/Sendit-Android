@@ -11,7 +11,7 @@
     tools:context="com.example.sendit.sendit.RESTActivity">
 
     <TextView
-        android:text="TextView"
+        android:text="@string/txtView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -23,15 +23,13 @@
         android:id="@+id/textView" />
 
     <Button
-        android:text="Button"
+        android:text="@string/btn_TestAPI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="69dp"
-        android:layout_marginStart="69dp"
         android:id="@+id/btn_TestAPI"
-        android:layout_alignBaseline="@+id/textView"
-        android:layout_alignBottom="@+id/textView"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:onClick="testAPI"/>
+        android:onClick="testAPI"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginTop="66dp" />
 </RelativeLayout>

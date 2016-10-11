@@ -1,7 +1,5 @@
 package com.example.sendit.sendit;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,15 +10,14 @@ import com.androidnetworking.interfaces.JSONArrayRequestListener;
 
 import org.json.JSONArray;
 
-public class RESTActivity extends AppCompatActivity {
+/**
+ * Created by Rodri on 11/10/16.
+ */
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rest);
-        AndroidNetworking.initialize(getApplicationContext());
-    }
-    public void testAPI(View view){
+public class ServiciosAPI{
+    public void testAPI(final View view){
+
+        //AndroidNetworking.initialize(getApplicationContext());
         AndroidNetworking.get("https://api.mercadolibre.com/sites")
                 .setPriority(Priority.LOW)
                 .build()
@@ -28,18 +25,18 @@ public class RESTActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         // do anything with response
-                        TextView t = (TextView) findViewById(R.id.textView);
+                        TextView t = (TextView) view.findViewById(R.id.textView);
                         try {
                             t.setText(response.get(0).toString());
                         } catch(Exception e) {
-                            t.setText("Excepcion");
+                            t.append("Excepcion");
                         }
                     }
                     @Override
                     public void onError(ANError error) {
                         // handle error
-                        TextView t = (TextView) findViewById(R.id.textView);
-                        t.setText("Error. Bad URL");
+                        TextView t = (TextView) view.findViewById(R.id.textView);
+                        t.append("Error");
                     }
                 });
     }
