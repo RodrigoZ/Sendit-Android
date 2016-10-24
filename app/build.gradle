@@ -29,5 +29,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:9.6.1'
     compile 'com.amitshekhar.android:android-networking:0.2.0'
     compile 'com.android.support:design:24.2.1'
+    compile 'com.akexorcist:googledirectionlibrary:1.0.4'
     testCompile 'junit:junit:4.12'
 }

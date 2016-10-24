@@ -28,4 +28,25 @@
         android:layout_below="@+id/btn_Maps"
         android:layout_centerHorizontal="true"
         android:onClick="openREST"/>
+
+    <Button
+        android:text="@string/btn_Login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:id="@+id/btn_Login"
+        android:layout_below="@+id/btn_REST"
+        android:layout_alignLeft="@+id/btn_REST"
+        android:layout_alignStart="@+id/btn_REST"
+        android:onClick="openLogin"/>
+
+    <Button
+        android:text="@string/btn_Trabajar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:id="@+id/btn_Trabajar"
+        android:layout_below="@+id/btn_Login"
+        android:layout_centerHorizontal="true"
+        android:onClick="openRemitente"/>
 </RelativeLayout>

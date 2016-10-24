@@ -2,6 +2,7 @@ package com.example.sendit.sendit;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -11,6 +12,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Leg;
+import com.akexorcist.googledirection.model.Route;
+import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -20,12 +29,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
 
 // TODO: 04/10/16 Cuando entro a la app, desde el boton del Main, y no tengo activada la localizacion, no me pide q tengo q activarla para poder usar la app 
 
@@ -132,6 +142,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mCurrLocationMarker.remove();
         }
 
+        String serverKey =  "AIzaSyBKRPo_18MeR5tM7MkrKOxpvkB6zpP5g10";
+        LatLng origen = new LatLng(location.getLatitude(), location.getLongitude());
+
+        //todo: obtener el destino del envio, por el momento uno al azar.
+        LatLng destino = new LatLng(location.getLatitude()+0.1, location.getLongitude()+0.1);
+        GoogleDirection.withServerKey(serverKey)
+                .from(origen)
+                .to(destino)
+                .execute(new DirectionCallback() {
+                    @Override
+                    public void onDirectionSuccess(Direction direction, String rawBody) {
+                        if(direction.isOK()){
+                            Route route = direction.getRouteList().get(0);
+                            Leg leg = route.getLegList().get(0);
+                            ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
+                            //Revisar bien el tema del Context! (http://stackoverflow.com/questions/4721626/how-to-get-the-current-context) <--- ESTABA BIEN!
+                            PolylineOptions polylineOptions = DirectionConverter.createPolyline(getApplicationContext(),directionPositionList,5, Color.RED);
+                            mMap.addPolyline(polylineOptions);
+                        }
+                        else {
+                            System.out.println("Error, Direccion invalida");
+                        }
+                    }
+
+                    @Override
+                    public void onDirectionFailure(Throwable t) {
+
+                    }
+                });
+
+        //Ver si esto funciona
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
         /*
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -141,9 +186,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        move map camera
+
 
         */
 

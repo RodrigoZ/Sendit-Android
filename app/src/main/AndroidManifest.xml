@@ -55,9 +55,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".RESTActivity" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RemitenteActivity"></activity>
     </application>
 
 </manifest>

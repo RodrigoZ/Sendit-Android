@@ -21,4 +21,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, RESTActivity.class);
         startActivity(intent);
     }
+
+    public void openLogin(View view){
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void openRemitente(View view){
+        Intent intent = new Intent(MainActivity.this, RemitenteActivity.class);
+        startActivity(intent);
+    }
 }

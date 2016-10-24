@@ -13,7 +13,9 @@ import org.json.JSONArray;
 /**
  * Created by Rodri on 11/10/16.
  */
-
+//mandarle jsons (ver si manejandome con jsons se puede)
+    //no procesar respuestas
+    //podria crearlo con objetos, (wrappeers de la respeusta del servicio)
 public class ServiciosAPI{
     public void testAPI(final View view){
 
