@@ -47,6 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected LocationRequest mLocationRequest;
     protected Location mLastLocation;
     protected Marker mCurrLocationMarker;
+    protected String serverKey =  "AIzaSyBKRPo_18MeR5tM7MkrKOxpvkB6zpP5g10";
 
     protected static final String TAG = "MainActivity";
 
@@ -136,32 +137,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged (Location location){
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
 
-        String serverKey =  "AIzaSyBKRPo_18MeR5tM7MkrKOxpvkB6zpP5g10";
-        LatLng origen = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-        //todo: obtener el destino del envio, por el momento uno al azar.
-        LatLng destino = new LatLng(location.getLatitude()+0.1, location.getLongitude()+0.1);
+        //TODO: obtener el destino del envio usando REST, por el momento uno al azar.
+        LatLng origen = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng destino = new LatLng(location.getLatitude() + 0.1, location.getLongitude() + 0.1);
         GoogleDirection.withServerKey(serverKey)
                 .from(origen)
                 .to(destino)
                 .execute(new DirectionCallback() {
                     @Override
                     public void onDirectionSuccess(Direction direction, String rawBody) {
-                        if(direction.isOK()){
+                        if (direction.isOK()) {
                             Route route = direction.getRouteList().get(0);
                             Leg leg = route.getLegList().get(0);
                             ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
                             //Revisar bien el tema del Context! (http://stackoverflow.com/questions/4721626/how-to-get-the-current-context) <--- ESTABA BIEN!
-                            PolylineOptions polylineOptions = DirectionConverter.createPolyline(getApplicationContext(),directionPositionList,5, Color.RED);
+                            PolylineOptions polylineOptions = DirectionConverter.createPolyline(getApplicationContext(), directionPositionList, 5, Color.RED);
                             mMap.addPolyline(polylineOptions);
-                        }
-                        else {
+                        } else {
                             System.out.println("Error, Direccion invalida");
                         }
                     }
@@ -172,10 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
 
-        //Ver si esto funciona
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
 
         /*
         //Place current location marker
@@ -185,10 +184,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
-
-        move map camera
-
-
         */
 
         //stop location updates
@@ -197,7 +192,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
 
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
