@@ -1,5 +1,6 @@
 package com.example.sendit.sendit;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -65,7 +66,7 @@ public class RemitenteActivity extends AppCompatActivity {
                         try {
                             System.out.println("On response");
                             child = response.get(0).toString();
-                            AddChild(child);
+                            addChild(child);
                         } catch(Exception e) {
                             child = "Excepcion";
                         }
@@ -88,19 +89,20 @@ public class RemitenteActivity extends AppCompatActivity {
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 // TODO: Do your stuff
                 myButton = new Button(getApplicationContext());
-                myButton.setText("Push Me");
+                myButton.setText("ACEPTAR");
 
-                RelativeLayout ll = (RelativeLayout) findViewById(R.id.activity_remitente);
+                RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_remitente);
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                ll.addView(myButton, lp);
+                //estara bien así? habrá otra forma? por lo visto no...
+                lp.setMargins(30,420,30,0);
+                rl.addView(myButton, lp);
 
                 myButton.setOnClickListener(new View.OnClickListener(){
 
                     @Override
                     public void onClick(View v){
-                        Toast.makeText(getApplicationContext(),
-                                "Button clicked", Toast.LENGTH_SHORT)
-                                .show();
+                        Intent intent = new Intent(RemitenteActivity.this, MapsActivity.class);
+                        startActivity(intent);
                     }
                 });
 
@@ -123,7 +125,7 @@ public class RemitenteActivity extends AppCompatActivity {
         });
     }
 
-    public void AddChild(String child)
+    public void addChild(String child)
     {
         enviosArrayList.add(child);
         childArrayList.put("Envio", enviosArrayList);

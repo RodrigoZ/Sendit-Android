@@ -56,7 +56,11 @@
         </activity>
         <activity android:name=".RESTActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".RemitenteActivity"></activity>
+        <activity android:name=".RemitenteActivity" />
+        <activity
+            android:name=".MapsTest"
+            android:label="@string/title_activity_maps_test"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "com.example.sendit.sendit"
@@ -24,9 +24,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.google.android.gms:play-services:9.6.1' //Si le clavo play services, el proyecto no llega a construirse, ya q play services me trae t0do (wearables, drive, analytics, etc)... hay q llamarlas de a una, en base a lo q usemos
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.google.android.gms:play-services-location:9.6.1'
-    compile 'com.google.android.gms:play-services-maps:9.6.1'
-    compile 'com.google.android.gms:play-services-appindexing:9.6.1'
+    compile 'com.google.android.gms:play-services-location:9.8.0'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
     compile 'com.amitshekhar.android:android-networking:0.2.0'
     compile 'com.android.support:design:24.2.1'
     compile 'com.akexorcist:googledirectionlibrary:1.0.4'
