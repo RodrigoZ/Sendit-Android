@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -8,45 +9,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.sendit.sendit.MainActivity">
+    tools:context="com.example.sendit.sendit.MainActivity"
+    android:background="@android:color/holo_blue_light"
+    android:elevation="0dp">
 
-    <Button
-        android:text="@string/btn_maps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_Maps"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="openMaps"/>
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:background="@mipmap/icon_launcher"
+        android:onClick="openRemitente"
+        android:layout_height="150dp"
+        android:layout_width="150dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="@string/btn_REST"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:id="@+id/btn_REST"
-        android:layout_below="@+id/btn_Maps"
-        android:layout_centerHorizontal="true"
-        android:onClick="openREST"/>
-
-    <Button
-        android:text="@string/btn_Login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:id="@+id/btn_Login"
-        android:layout_below="@+id/btn_REST"
-        android:layout_alignLeft="@+id/btn_REST"
-        android:layout_alignStart="@+id/btn_REST"
-        android:onClick="openLogin"/>
-
-    <Button
-        android:text="@string/btn_Trabajar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:id="@+id/btn_Trabajar"
-        android:layout_below="@+id/btn_Login"
-        android:layout_centerHorizontal="true"
-        android:onClick="openRemitente"/>
 </RelativeLayout>

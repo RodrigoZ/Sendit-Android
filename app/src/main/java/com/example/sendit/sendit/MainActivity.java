@@ -13,22 +13,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-    public void openMaps(View view){
-        Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-        startActivity(intent);
-    }
-    public void openREST(View view){
-        Intent intent = new Intent(MainActivity.this, RESTActivity.class);
-        startActivity(intent);
-    }
-
-    public void openLogin(View view){
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-    }
 
     public void openRemitente(View view){
         Intent intent = new Intent(MainActivity.this, RemitenteActivity.class);
         startActivity(intent);
     }
+
 }

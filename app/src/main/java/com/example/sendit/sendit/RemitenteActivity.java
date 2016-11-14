@@ -17,6 +17,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,53 +92,28 @@ public class RemitenteActivity extends AppCompatActivity {
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener(){
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id){
-                myButton = new Button(getApplicationContext());
-                myButton.setText("ACEPTAR");
 
-                RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_remitente);
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                //estara bien así? habrá otra forma? por lo visto no...
-                lp.setMargins(30,420,30,0);
-                rl.addView(myButton, lp);
+                //TODO
+                //obtendria la direccion y la guardaria en una variable global para luego mostrarla en la siguiente activity
+                //o en la siguiente activity podría pedir la direccion de "x" envio y q me la devuelvan... VER!!
+                final String selected = (String) adapter.getChild(groupPosition, childPosition);
+                System.out.println("Selected" + selected);
 
-                myButton.setOnClickListener(new View.OnClickListener(){
+                Intent intent = new Intent(RemitenteActivity.this, EnvioActivity.class);
+                startActivity(intent);
 
-                    @Override
-                    public void onClick(View v){
-                        Intent intent = new Intent(RemitenteActivity.this, MapsActivity.class);
-                        startActivity(intent);
-                    }
-                });
                 return false;
             }
         });
-/*
+
         expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 // TODO: Do your stuff
-                myButton = new Button(getApplicationContext());
-                myButton.setText("ACEPTAR");
-
-                RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_remitente);
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                //estara bien así? habrá otra forma? por lo visto no...
-                lp.setMargins(30,420,30,0);
-                rl.addView(myButton, lp);
-
-                myButton.setOnClickListener(new View.OnClickListener(){
-
-                    @Override
-                    public void onClick(View v){
-                        Intent intent = new Intent(RemitenteActivity.this, MapsActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
                 return false;
             }
         });
-*/
+
         expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int groupPosition) {

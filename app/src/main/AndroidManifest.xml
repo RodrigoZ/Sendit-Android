@@ -61,6 +61,7 @@
             android:name=".MapsTest"
             android:label="@string/title_activity_maps_test"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".EnvioActivity"></activity>
     </application>
 
 </manifest>

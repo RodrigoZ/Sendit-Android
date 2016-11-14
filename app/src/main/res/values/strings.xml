@@ -2,16 +2,11 @@
     <string name="app_name">Sendit</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">Sendit</string>
-    <string name="title_activity_login">Iniciar Sesión</string>
-
-    <string name="btn_maps">En donde estoy?</string>
-    <string name="btn_REST">REST</string>
-    <string name="btn_TestAPI">TEST</string>
-    <string name="txtView">Texto</string>
-    <string name="btn_Login">Login</string>
-    <string name="txt_User">Usuario</string>
-    <string name="txt_Pass">Contraseña</string>
-    <string name="btn_Trabajar">Comenzar a Trabajar</string>
     <string name="title_activity_remitente">RemitenteActivity</string>
     <string name="title_activity_maps_test">MapsTest</string>
+    <string name="btn_Login">Login</string>
+    <string name="txt_User">User</string>
+    <string name="btn_TestAPI">TEST</string>
+    <string name="txtView"></string>
+    <string name="txt_Pass">Password</string>
 </resources>

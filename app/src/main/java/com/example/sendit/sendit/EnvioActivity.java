@@ -9,26 +9,22 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
-
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -39,20 +35,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONArray;
-
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-// TODO: 04/10/16 Cuando entro a la app, desde el boton del Main, y no tengo activada la localizacion, no me pide q tengo q activarla para poder usar la app 
-
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
+public class EnvioActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     protected GoogleMap mMap;
     protected SupportMapFragment mapFrag;
@@ -61,12 +48,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected Location mLastLocation;
     protected String serverKey =  "AIzaSyBKRPo_18MeR5tM7MkrKOxpvkB6zpP5g10"; //es la key de Directions
     protected static final String TAG = "MainActivity";
+    public Button myButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_envio);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -75,8 +63,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buildGoogleApiClient();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFrag = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.enviomap);
         mapFrag.getMapAsync(this);
+
+
     }
 
     @Override
@@ -129,6 +119,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
+
+        myButton = new Button(getApplicationContext());
+        myButton.setText("ACEPTAR");
+
+        LinearLayout ll = (LinearLayout) findViewById(R.id.activity_envio);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        //estara bien así? habrá otra forma? por lo visto no...
+        lp.setMargins(30, 550, 30, 0);
+        ll.addView(myButton, lp);
+
+        myButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EnvioActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+
+        });
     }
 
     @Override
@@ -157,16 +166,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged (Location location){
         mLastLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo(19));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 19));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
-
-        LocationSender(mLastLocation);
         Directions (mLastLocation);
     }
 
@@ -199,48 +205,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     }
                 });
-
-        Location.distanceBetween(origen.latitude, origen.longitude, destino.latitude, destino.longitude, results);
-        // Location.distanceBetween(-45.4, -63.4, -45.3, -63.5, results);
-        System.out.println("Resultado: "+ results[0]); //los results están en metros
-
-        //TODO: cuando haga "click" en acpetar, enviar por request q el envio fue tomado
-        if (results[0] < 300){
-            Button myButton = new Button(getApplicationContext());
-            myButton.setText("RECEPCION ENVIO");
-
-            LinearLayout ll = (LinearLayout) findViewById(R.id.activity_maps);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            //estara bien así? habrá otra forma? por lo visto no...
-            lp.setMargins(30,420,30,0);
-            ll.addView(myButton, lp);
-
-            myButton.setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View v){
-                    Toast.makeText(getApplicationContext(), "Envio en posesion", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    }
-
-    //Clase para mandarle la localizacion al servidor
-    //Por el momento, me está enviando los datos una sola vez...
-    public void LocationSender(Location location){
-        mLastLocation = location;
-        double latitude =  mLastLocation.getLatitude();
-        double longitude = mLastLocation.getLongitude();
-
-        Toast.makeText(getApplicationContext(), "Latitud: " + latitude, Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "Longitude: " + longitude, Toast.LENGTH_LONG).show();
-
-        //TODO: modificar la URL. Este metodo "PUT" requiere algo más? solamente envio?
-        AndroidNetworking.put("laapisendit.com/localicacion")
-                .addBodyParameter("Latitud", Double.toString(latitude))
-                .addBodyParameter("Longitud", Double.toString(longitude))
-                .setPriority(Priority.MEDIUM)
-                .build();
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
