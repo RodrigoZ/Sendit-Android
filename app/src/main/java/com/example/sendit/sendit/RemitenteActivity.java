@@ -64,9 +64,13 @@ public class RemitenteActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         // do anything with response
                         try {
+                            int length = response.length();
                             System.out.println("On response");
-                            child = response.get(0).toString();
-                            addChild(child);
+                            for (int i = 0; i < length; i++)
+                            {
+                                child = response.get(i).toString();
+                                addChild(child);
+                            }
                         } catch(Exception e) {
                             child = "Excepcion";
                         }
@@ -84,6 +88,30 @@ public class RemitenteActivity extends AppCompatActivity {
         adapter = new ListAdapterExpandable(this, headersArrayList, childArrayList);
         expListView.setAdapter(adapter);
 
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener(){
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id){
+                myButton = new Button(getApplicationContext());
+                myButton.setText("ACEPTAR");
+
+                RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_remitente);
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                //estara bien así? habrá otra forma? por lo visto no...
+                lp.setMargins(30,420,30,0);
+                rl.addView(myButton, lp);
+
+                myButton.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v){
+                        Intent intent = new Intent(RemitenteActivity.this, MapsActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                return false;
+            }
+        });
+/*
         expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -109,7 +137,7 @@ public class RemitenteActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+*/
         expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int groupPosition) {

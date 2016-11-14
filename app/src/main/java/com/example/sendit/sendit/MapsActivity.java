@@ -79,43 +79,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFrag.getMapAsync(this);
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-
-        createLocationRequest();
-        //mGoogleApiClient.connect();
-    }
-
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-
-    //Runs when a GoogleApiClient object successfully connects.
-    @Override
-    public void onConnected(Bundle connectionHint) { //el onconnected se ejecuta una vez (creo) por eso no me está actualizando los datos en el onLocationChanged
-        /*mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);*/
-        startLocationUpdates();
-    }
-
-    protected void startLocationUpdates(){
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -123,18 +86,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
     }
 
     @Override
@@ -147,14 +98,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-                buildGoogleApiClient();
+                //buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true); // While enabled and the location is available, the my-location layer continuously draws an indication of a user's current location and bearing
             }
         }
         else {
-            buildGoogleApiClient();
+            //buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    //Runs when a GoogleApiClient object successfully connects.
+    @Override
+    public void onConnected(Bundle connectionHint) { //el onconnected se ejecuta una vez (creo) por eso no me está actualizando los datos en el onLocationChanged
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -175,15 +155,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //TODO: deberia tener un proceso en background que le esté mandando al servidor la posicion actual del tipo (LocationSender)
     @Override
     public void onLocationChanged (Location location){
-        float [] results = new float[1];
         mLastLocation = location;
-
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-        LocationSender(mLastLocation);
+        //stop location updates
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
 
+        LocationSender(mLastLocation);
+        Directions (mLastLocation);
+    }
+
+    //Clase para dibujar el recorrido en el mapa
+    public void Directions(Location location){
+        float [] results = new float[1];
         //TODO: obtener el destino del envio usando REST, por el momento uno al azar.
         LatLng destino = new LatLng(location.getLatitude() + 0.1, location.getLongitude() + 0.1);
         LatLng origen = new LatLng(location.getLatitude(), location.getLongitude());
@@ -212,9 +200,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
 
         Location.distanceBetween(origen.latitude, origen.longitude, destino.latitude, destino.longitude, results);
-       // Location.distanceBetween(-45.4, -63.4, -45.3, -63.5, results);
+        // Location.distanceBetween(-45.4, -63.4, -45.3, -63.5, results);
         System.out.println("Resultado: "+ results[0]); //los results están en metros
 
+        //TODO: enviar que el pedido fue aceptado cuando haga click en aceptar
         if (results[0] < 300){
             Button myButton = new Button(getApplicationContext());
             myButton.setText("RECEPCION ENVIO");
@@ -233,11 +222,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
-
-        //stop location updates
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        }
     }
 
     //Clase para mandarle la localizacion al servidor
@@ -247,21 +231,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double latitude =  mLastLocation.getLatitude();
         double longitude = mLastLocation.getLongitude();
 
+        Toast.makeText(getApplicationContext(), "Latitud: " + latitude, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Longitude: " + longitude, Toast.LENGTH_LONG).show();
+
         //TODO: modificar la URL. Este metodo "PUT" requiere algo más? solamente envio?
         AndroidNetworking.put("laapisendit.com/localicacion")
                 .addBodyParameter("Latitud", Double.toString(latitude))
                 .addBodyParameter("Longitud", Double.toString(longitude))
                 .setPriority(Priority.MEDIUM)
                 .build();
-
-        Toast.makeText(getApplicationContext(), "Latitud: " + latitude, Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "Longitude: " + longitude, Toast.LENGTH_LONG).show();
     }
 
-
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
-
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
